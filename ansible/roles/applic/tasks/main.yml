@@ -1,0 +1,21 @@
+- name: unDeploy Task App
+  file:
+    state: "{{ item }}"
+    path: "/home/ubuntu/target1/"
+  with_items:
+    - absent
+    - directory
+- name: recurse
+  find:
+    path: /home/ubuntu/dotnetcore-helloworld/DotNetCoreHelloWorld/pub/
+    recurse: yes
+    file_type: file
+  register: files
+- name: check the content and structure of the variable
+  debug:
+    var: files
+- name: copy files to tmp
+  copy:
+    src: "{{item.path}}"
+    dest: /home/ubuntu/target1/
+  with_items: "{{files.files}}"
