@@ -1,6 +1,11 @@
-﻿using Implementation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +35,11 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
+			app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello Serko!!");
+            });
             app.UseMvc();
         }
     }
