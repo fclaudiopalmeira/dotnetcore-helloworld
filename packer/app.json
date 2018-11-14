@@ -1,0 +1,61 @@
+{
+  "variables": {
+    "tenant_id": "{{env `ARM_TENANT_ID`}}",
+    "client_id": "{{env `ARM_CLIENT_ID`}}",
+    "client_secret": "{{env `ARM_CLIENT_SECRET`}}",
+    "managed_resource_group": "{{env `ARM_RESOURCE_GROUP_DISKS`}}",
+    "subscription_id": "{{env `ARM_SUBSCRIPTION_ID`}}",
+    "playbook_drop_path": "",
+    "random_path": "{{timestamp}}"
+  },
+  "builders": [{
+    "type": "azure-arm",
+
+    "client_id": "{{user `client_id`}}",
+    "client_secret": "{{user `client_secret`}}",
+    "subscription_id": "{{user `subscription_id`}}",
+    "tenant_id": "{{user `tenant_id`}}",
+    
+    "os_type": "Linux",
+    "image_publisher": "RedHat",
+    "image_offer": "RHEL",
+    "image_sku": "7.3",
+
+    "managed_image_resource_group_name": "{{user `managed_resource_group`}}",
+    "managed_image_name": "demoPackerImage-{{isotime \"2006-01-02_03_04_05\"}}",
+
+    "location": "Central US",
+    "vm_size": "Basic_A1"
+  }],
+  "provisioners": [
+    {
+      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+      "inline": [
+        "apt-get update",
+        "apt-get upgrade -y",
+	    "apt-get -y install wget",
+	    "wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb",
+	    "dpkg -i packages-microsoft-prod.deb",
+	    "apt-get install apt-transport-https",
+	    "apt-get update",
+	    "apt-get install -y dotnet-sdk-2.1 dotnet-runtime-2.1 dotnet-sdk-2.1.4 nuget",
+        "apt-get -y install nginx"
+       ],
+      "inline_shebang": "/bin/sh -x",
+      "type": "shell"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "{{user `playbook_drop_path`}}/ansible/site.yml",
+      "playbook_dir": "{{user `playbook_drop_path`}}/ansible"
+    },       
+    {
+    "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+    "inline": [
+      "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+    ],
+    "inline_shebang": "/bin/sh -x",
+    "type": "shell"
+    }
+  ]
+}
