@@ -17,9 +17,9 @@
     "tenant_id": "{{user `tenant_id`}}",
     
     "os_type": "Linux",
-    "image_publisher": "RedHat",
-    "image_offer": "RHEL",
-    "image_sku": "7.3",
+    "image_publisher": "Canonical",
+    "image_offer": "UbuntuServer",
+    "image_sku": "16.04-LTS",
 
     "managed_image_resource_group_name": "{{user `managed_resource_group`}}",
     "managed_image_name": "demoPackerImage-{{isotime \"2006-01-02_03_04_05\"}}",
@@ -31,15 +31,19 @@
     {
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
       "inline": [
-        "apt-get update",
-        "apt-get upgrade -y",
-	    "apt-get -y install wget",
-	    "wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb",
-	    "dpkg -i packages-microsoft-prod.deb",
-	    "apt-get install apt-transport-https",
-	    "apt-get update",
-	    "apt-get install -y dotnet-sdk-2.1 dotnet-runtime-2.1 dotnet-sdk-2.1.4 nuget",
-        "apt-get -y install nginx"
+        "sudo apt-get install -y software-properties-common",
+        "sudo apt-add-repository ppa:ansible/ansible",
+        "sudo apt-get update",
+        "sudo apt-get upgrade -y",
+	      "sudo apt-get -y install wget",
+	      "sudo wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb",
+	      "sudo dpkg -i packages-microsoft-prod.deb",
+	      "sudo apt-get install -y apt-transport-https",
+	      "sudo apt-get update",
+	      "sudo apt-get install -y dotnet-sdk-2.1 dotnet-runtime-2.1 dotnet-sdk-2.1.4 nuget",
+        "sudo apt-get install -y ansible"
+        
+
        ],
       "inline_shebang": "/bin/sh -x",
       "type": "shell"

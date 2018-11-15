@@ -33,7 +33,7 @@
     - directory
 - name: Loading Files List
   find:
-    path: ./roles/applic/files/
+    path: /var/lib/jenkins/workspace/main/Serko_Task/DotNetCoreHelloWorld/bin/Debug/netcoreapp2.1/publish/
     recurse: yes
     file_type: file
   register: files

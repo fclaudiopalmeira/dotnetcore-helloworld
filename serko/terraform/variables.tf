@@ -3,11 +3,11 @@ variable "credentials" {
 }
 
 variable "project" {
-  default = "terraform-ansible-serko"
+  default = "serkoterraform-ansible"
 }
 
 variable "manageddiskname-rg" {
-  default = "managed-images"
+  default = "serkojenkins"
 }
 
 variable "baked_image_url" {
