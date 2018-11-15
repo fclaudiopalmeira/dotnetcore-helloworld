@@ -1,11 +1,11 @@
 #!/bin/bash
 
 echo "************* set environment vars"
-export ARM_CLIENT_ID=$1
-export ARM_CLIENT_SECRET=$2
-export ARM_SUBSCRIPTION_ID=$3
-export ARM_TENANT_ID=$4
-export ARM_RESOURCE_GROUP_DISKS=$5
+ARM_CLIENT_ID=$1
+ARM_CLIENT_SECRET=$2
+ARM_SUBSCRIPTION_ID=$3
+ARM_TENANT_ID=$4
+ARM_RESOURCE_GROUP_DISKS=$5
 
 
 
