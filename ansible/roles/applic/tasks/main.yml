@@ -33,7 +33,7 @@
     - directory
 - name: Loading Files List
   find:
-    path: /home/ubuntu/dotnetcore-helloworld/DotNetCoreHelloWorld/pub/
+    path: ./roles/applic/files/
     recurse: yes
     file_type: file
   register: files
