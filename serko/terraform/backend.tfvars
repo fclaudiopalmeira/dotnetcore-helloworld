@@ -1,4 +1,4 @@
-storage_account_name = "serkojenkins"
+storage_account_name = "serkostorageaccount"
 
 container_name = "serkoterraform-state"
 
