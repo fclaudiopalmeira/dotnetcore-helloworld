@@ -10,10 +10,20 @@
   copy:
     src: first.sh
     dest: /usr/scripts
+- name: Set first.sh Executable
+  file:
+    path: /usr/scripts/first.sh
+    state: touch
+    mode: "+x"
 - name: Copying Scripts - Second
   copy:
     src: second.sh
     dest: /usr/scripts
+- name: Set second.sh Executable
+  file:
+    path: /usr/scripts/second.sh
+    state: touch
+    mode: "+x"
 - name: unDeploy Task App
   file:
     state: "{{ item }}"
@@ -49,5 +59,6 @@
 - name: Calling the Script
   cron:
     name: "Loading Serko WebApi"
+    user: root
     special_time: reboot
-    job: "/usr/scripts/first.sh"
+    job: "/usr/scripts/first.sh > /home/ubuntu/cron.log 2>&1"

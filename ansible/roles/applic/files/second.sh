@@ -1,1 +1,1 @@
-/usr/bin/dotnet /home/ubuntu/pub/WebApi.dll
+/usr/bin/dotnet	/usr/share/webapi/WebApi.dll
