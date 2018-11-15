@@ -1,21 +1,53 @@
+- name: Creating Deploy Directory
+  file:
+    path: /usr/share/webapi
+    state: directory
+- name: Creating Scripts Directory
+  file:
+    path: /usr/scripts
+    state: directory
+- name: Copying Scripts - First
+  copy:
+    src: first.sh
+    dest: /usr/scripts
+- name: Copying Scripts - Second
+  copy:
+    src: second.sh
+    dest: /usr/scripts
 - name: unDeploy Task App
   file:
     state: "{{ item }}"
-    path: "/home/ubuntu/target1/"
+    path: "/usr/share/webapi"
   with_items:
     - absent
     - directory
-- name: recurse
+- name: Loading Files List
   find:
     path: /home/ubuntu/dotnetcore-helloworld/DotNetCoreHelloWorld/pub/
     recurse: yes
     file_type: file
   register: files
-- name: check the content and structure of the variable
+- name: Deploy Task App
   debug:
     var: files
-- name: copy files to tmp
+- name: copy files to target directory
   copy:
     src: "{{item.path}}"
-    dest: /home/ubuntu/target1/
+    dest: /usr/share/webapi
   with_items: "{{files.files}}"
+- name: Set PATH Environment Var
+  cron:
+    name: PATH
+    env: yes
+    value: /usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+- name: Set SHELL env Var
+  cron:
+    name: SHELL
+    env: yes
+    value: /bin/sh
+    insertbefore: PATH
+- name: Calling the Script
+  cron:
+    name: "Loading Serko WebApi"
+    special_time: reboot
+    job: "/usr/scripts/first.sh"
