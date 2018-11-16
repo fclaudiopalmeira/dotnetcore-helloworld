@@ -33,7 +33,7 @@
     - directory
 - name: Loading Files List
   find:
-    path: "{{ role_path }}/files/
+    path: "{{ role_path }}/files/"
     recurse: yes
     file_type: file
   register: files
