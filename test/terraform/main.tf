@@ -8,53 +8,53 @@ terraform {
 provider "azurerm" {}
 
 # Create a resource group if it is not there yet
-resource "azurerm_resource_group" "serko_resource_group" {
-  name     = "serkodemocreate"
+resource "azurerm_resource_group" "company_resource_group" {
+  name     = "companydemocreate"
   location = "Central US"
 
   tags {
-    environment = "Serko Demo"
+    environment = "company Demo"
   }
 }
 
 # Create the virtual network
-resource "azurerm_virtual_network" "serko_virtual_network" {
-  name                = "serkodemo"
+resource "azurerm_virtual_network" "company_virtual_network" {
+  name                = "companydemo"
   address_space       = ["10.0.0.0/16"]
-  location            = "${azurerm_resource_group.serko_resource_group.location}"
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+  location            = "${azurerm_resource_group.company_resource_group.location}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
 
   tags {
-    environment = "Serko Demo"
+    environment = "company Demo"
   }
 }
 
 # Create the subnet
-resource "azurerm_subnet" "serko_demo_subnet" {
-  name                 = "serkodemo"
-  resource_group_name  = "${azurerm_resource_group.serko_resource_group.name}"
-  virtual_network_name = "${azurerm_virtual_network.serko_virtual_network.name}"
+resource "azurerm_subnet" "company_demo_subnet" {
+  name                 = "companydemo"
+  resource_group_name  = "${azurerm_resource_group.company_resource_group.name}"
+  virtual_network_name = "${azurerm_virtual_network.company_virtual_network.name}"
   address_prefix       = "10.0.1.0/24"
 }
 
 # Create the public IPs
-resource "azurerm_public_ip" "serko_demo_public_ip" {
-  name                         = "serkopublicip"
-  location                     = "${azurerm_resource_group.serko_resource_group.location}"
-  resource_group_name          = "${azurerm_resource_group.serko_resource_group.name}"
+resource "azurerm_public_ip" "company_demo_public_ip" {
+  name                         = "companypublicip"
+  location                     = "${azurerm_resource_group.company_resource_group.location}"
+  resource_group_name          = "${azurerm_resource_group.company_resource_group.name}"
   public_ip_address_allocation = "static"
-  domain_name_label            = "serkodemoiac"
+  domain_name_label            = "companydemoiac"
 
   tags {
-    environment = "Serko Demo"
+    environment = "company Demo"
   }
 }
 
 # Create The Network Security Group and a simple rule
-resource "azurerm_network_security_group" "serko_demo_security_group" {
-  name                = "serkosecuritygroups"
-  location            = "${azurerm_resource_group.serko_resource_group.location}"
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+resource "azurerm_network_security_group" "company_demo_security_group" {
+  name                = "companysecuritygroups"
+  location            = "${azurerm_resource_group.company_resource_group.location}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
 
   security_rule {
     name                       = "HTTP"
@@ -69,40 +69,40 @@ resource "azurerm_network_security_group" "serko_demo_security_group" {
   }
 
   tags {
-    environment = "Serko Demo"
+    environment = "company Demo"
   }
 }
 
 resource "azurerm_lb" "vmss_lb" {
   name                = "vmss-lb"
-  location            = "${azurerm_resource_group.serko_resource_group.location}"
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+  location            = "${azurerm_resource_group.company_resource_group.location}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
 
   frontend_ip_configuration {
     name                 = "PublicIPAddress"
-    public_ip_address_id = "${azurerm_public_ip.serko_demo_public_ip.id}"
+    public_ip_address_id = "${azurerm_public_ip.company_demo_public_ip.id}"
   }
 
   tags {
-    environment = "Serko Terraform Demo"
+    environment = "company Terraform Demo"
   }
 }
 
 resource "azurerm_lb_backend_address_pool" "bpepool" {
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
   loadbalancer_id     = "${azurerm_lb.vmss_lb.id}"
   name                = "BackEndAddressPool"
 }
 
 resource "azurerm_lb_probe" "vmss_probe" {
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
   loadbalancer_id     = "${azurerm_lb.vmss_lb.id}"
   name                = "ssh-running-probe"
   port                = "8080"
 }
 
 resource "azurerm_lb_rule" "lbnatrule" {
-  resource_group_name            = "${azurerm_resource_group.serko_resource_group.name}"
+  resource_group_name            = "${azurerm_resource_group.company_resource_group.name}"
   loadbalancer_id                = "${azurerm_lb.vmss_lb.id}"
   name                           = "http"
   protocol                       = "Tcp"
@@ -117,22 +117,22 @@ resource "azurerm_lb_rule" "lbnatrule" {
 resource "random_id" "randomId" {
   keepers = {
     # Generate a new ID only when a new resource group is defined
-    resource_group = "${azurerm_resource_group.serko_resource_group.name}"
+    resource_group = "${azurerm_resource_group.company_resource_group.name}"
   }
 
   byte_length = 8
 }
 
 # Create a storage account for boot diagnostics
-resource "azurerm_storage_account" "serko_demo_storage_account" {
+resource "azurerm_storage_account" "company_demo_storage_account" {
   name                     = "diag${random_id.randomId.hex}"
-  resource_group_name      = "${azurerm_resource_group.serko_resource_group.name}"
-  location                 = "${azurerm_resource_group.serko_resource_group.location}"
+  resource_group_name      = "${azurerm_resource_group.company_resource_group.name}"
+  location                 = "${azurerm_resource_group.company_resource_group.location}"
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
   tags {
-    environment = "Serko Terraform Demo"
+    environment = "company Terraform Demo"
   }
 }
 
@@ -145,8 +145,8 @@ data "azurerm_image" "image" {
 # Create the virtual machine scale set
 resource "azurerm_virtual_machine_scale_set" "vmss" {
   name                = "vmscaleset"
-  location            = "${azurerm_resource_group.serko_resource_group.location}"
-  resource_group_name = "${azurerm_resource_group.serko_resource_group.name}"
+  location            = "${azurerm_resource_group.company_resource_group.location}"
+  resource_group_name = "${azurerm_resource_group.company_resource_group.name}"
   upgrade_policy_mode = "Automatic"
 
   sku {
@@ -167,7 +167,7 @@ resource "azurerm_virtual_machine_scale_set" "vmss" {
   }
 
   os_profile {
-    computer_name_prefix = "serkovm"
+    computer_name_prefix = "companyvm"
     admin_username       = "ubuntu"
     admin_password       = "klb15cj1"
   }
@@ -187,21 +187,21 @@ resource "azurerm_virtual_machine_scale_set" "vmss" {
 
     ip_configuration {
       name                                   = "IPConfiguration"
-	  subnet_id                              = "${azurerm_subnet.serko_demo_subnet.id}"
+	  subnet_id                              = "${azurerm_subnet.company_demo_subnet.id}"
 	  primary                                = true
       load_balancer_backend_address_pool_ids = ["${azurerm_lb_backend_address_pool.bpepool.id}"]
     }
   }
 
   tags {
-    environment = "Serko Terraform Demo"
+    environment = "company Terraform Demo"
   }
 }
 
 output "vm_ip" {
-  value = "${azurerm_public_ip.serko_demo_public_ip.ip_address}"
+  value = "${azurerm_public_ip.company_demo_public_ip.ip_address}"
 }
 
 output "vm_dns" {
-  value = "http://${azurerm_public_ip.serko_demo_public_ip.domain_name_label}.azurewebsites.net"
+  value = "http://${azurerm_public_ip.company_demo_public_ip.domain_name_label}.azurewebsites.net"
 }
