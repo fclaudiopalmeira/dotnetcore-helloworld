@@ -21,7 +21,7 @@ packer build  -var playbook_drop_path=./drop ./app.json 2>&1 | tee packer-build-
 export manageddiskname=$(cat ./packer-build-output.log | grep ManagedImageName: | awk '{print $2}')
 
 ##Make sure that the Variable is stored where Terraform can find it.
-sed -i 's/manageddiskname=$manageddiskname/'manageddiskname="$manageddiskname"'/g' /var/lib/jenkins/workspace/main/Serko_Task/serko/terraform/apply.sh
+sed -i 's/manageddiskname=$manageddiskname/'manageddiskname="$manageddiskname"'/g' /var/lib/jenkins/workspace/main/Company_Task/company/terraform/apply.sh
 
 ##Echo for troublehsooting the Script
 echo "variable $manageddiskname"
