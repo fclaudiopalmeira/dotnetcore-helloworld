@@ -46,16 +46,16 @@ pipeline {
         }
         stage('Build and Publish') {
             steps {
-             sh 'dotnet publish --configuration=Release --output "$WORKSPACE"/serko/drop/ansible/roles/applic/files'   
+             sh 'dotnet publish --configuration=Release --output "$WORKSPACE"/company/drop/ansible/roles/applic/files'   
             }
         }
         stage('Build Image using Packer, Deploy App using Ansible and install Infrastructure using Terraform') {
             steps {
                 sh """
-                cd "$WORKSPACE"/serko
+                cd "$WORKSPACE"/company
                 chmod +x ./buildvm.sh
                 ./buildvm.sh
-                cd "$WORKSPACE"/serko/terraform
+                cd "$WORKSPACE"/company/terraform
                 chmod +x ./init.sh
                 chmod +x ./apply.sh
                 ./init.sh
