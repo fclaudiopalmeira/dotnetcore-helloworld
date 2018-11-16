@@ -24,23 +24,23 @@
     path: /usr/scripts/second.sh
     state: touch
     mode: "+x"
-- name: unDeploy Task App
+- name: unDeploy App if it´s there
   file:
     state: "{{ item }}"
     path: "/usr/share/webapi"
   with_items:
     - absent
     - directory
-- name: Loading Files List
+- name: Load Files List to copy over to the deploy directory
   find:
     path: "{{ role_path }}/files/"
     recurse: yes
     file_type: file
   register: files
-- name: Deploy Task App
+- name: Show What is Being Loaded
   debug:
     var: files
-- name: copy files to target directory
+- name: Copy files to target directory
   copy:
     src: "{{item.path}}"
     dest: /usr/share/webapi

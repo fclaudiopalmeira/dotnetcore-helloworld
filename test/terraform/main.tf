@@ -4,10 +4,10 @@ terraform {
   backend "azurerm" {}
 }
 
-# Configure the Microsoft Azure Provider
+# Set the Provider as AZURE and Configures it
 provider "azurerm" {}
 
-# Create a resource group if it doesn’t exist
+# Create a resource group if it is not there yet
 resource "azurerm_resource_group" "serko_resource_group" {
   name     = "serkodemocreate"
   location = "Central US"
@@ -17,7 +17,7 @@ resource "azurerm_resource_group" "serko_resource_group" {
   }
 }
 
-# Create virtual network
+# Create the virtual network
 resource "azurerm_virtual_network" "serko_virtual_network" {
   name                = "serkodemo"
   address_space       = ["10.0.0.0/16"]
@@ -29,7 +29,7 @@ resource "azurerm_virtual_network" "serko_virtual_network" {
   }
 }
 
-# Create subnet
+# Create the subnet
 resource "azurerm_subnet" "serko_demo_subnet" {
   name                 = "serkodemo"
   resource_group_name  = "${azurerm_resource_group.serko_resource_group.name}"
@@ -37,7 +37,7 @@ resource "azurerm_subnet" "serko_demo_subnet" {
   address_prefix       = "10.0.1.0/24"
 }
 
-# Create public IPs
+# Create the public IPs
 resource "azurerm_public_ip" "serko_demo_public_ip" {
   name                         = "serkopublicip"
   location                     = "${azurerm_resource_group.serko_resource_group.location}"
@@ -50,7 +50,7 @@ resource "azurerm_public_ip" "serko_demo_public_ip" {
   }
 }
 
-# Create Network Security Group and rule
+# Create The Network Security Group and a simple rule
 resource "azurerm_network_security_group" "serko_demo_security_group" {
   name                = "serkosecuritygroups"
   location            = "${azurerm_resource_group.serko_resource_group.location}"
@@ -113,7 +113,7 @@ resource "azurerm_lb_rule" "lbnatrule" {
   probe_id                       = "${azurerm_lb_probe.vmss_probe.id}"
 }
 
-# Generate random text for a unique storage account name
+# Generate a random name for the unique storage account
 resource "random_id" "randomId" {
   keepers = {
     # Generate a new ID only when a new resource group is defined
@@ -123,7 +123,7 @@ resource "random_id" "randomId" {
   byte_length = 8
 }
 
-# Create storage account for boot diagnostics
+# Create a storage account for boot diagnostics
 resource "azurerm_storage_account" "serko_demo_storage_account" {
   name                     = "diag${random_id.randomId.hex}"
   resource_group_name      = "${azurerm_resource_group.serko_resource_group.name}"
@@ -136,13 +136,13 @@ resource "azurerm_storage_account" "serko_demo_storage_account" {
   }
 }
 
-# Points to Packer build image 
+# Tells it to use the Packer built image 
 data "azurerm_image" "image" {
   name                = "${var.manageddiskname}"
   resource_group_name = "${var.manageddiskname-rg}"
 }
 
-# Create virtual machine scale set
+# Create the virtual machine scale set
 resource "azurerm_virtual_machine_scale_set" "vmss" {
   name                = "vmscaleset"
   location            = "${azurerm_resource_group.serko_resource_group.location}"

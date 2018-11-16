@@ -1,6 +1,6 @@
 ---
 
-# This playbook deploys a simple standalone Tomcat 7 server.
+# This playbook deploys a simple .NET CORE APP with all it´s dependencies to run.
 
 - hosts: 127.0.0.1
   become: true
