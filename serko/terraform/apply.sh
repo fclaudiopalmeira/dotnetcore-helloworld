@@ -1,6 +1,6 @@
 #!/bin/bash
 ls -la
-echo "************* execute terraform apply  terraform apply -auto-approve -var manageddiskname=$6"
+echo "************* execute terraform apply  terraform apply -auto-approve -var manageddiskname=$manageddiskname"
 
 ## execute terrafotm build and sendout to packer-build-output
 export ARM_CLIENT_ID=1a2cc6ee-65fe-4e09-8e35-9c38b562040f
