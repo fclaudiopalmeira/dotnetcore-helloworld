@@ -9,7 +9,7 @@ export ARM_SUBSCRIPTION_ID=84a68a68-a41a-4759-bc28-0ccd232569f1
 export ARM_TENANT_ID=40fda9c3-8ec7-4be7-a2fb-bdb9ab85e345
 export ARM_ACCESS_KEY=1KULLUw1oE5B9xuBeox/Yn6VZhw90WX6yxm+aVj16Y6RiOiJXkKard1xgyYOqD05vFMQnm9YRqqF4jUsSxoAog==
 
-terraform apply -auto-approve -var "manageddiskname=$manageddiskname"
+terraform apply -auto-approve -var "manageddiskname=$(cat /var/lib/jenkins/workspace/main/Serko_Task/serko/packer-build-output.log | grep ManagedImageName: | awk '{print $2}')"
 terraform output vm_ip > inventory
 
 ##echo " ansible_user=azureuser" >> inventory
