@@ -187,8 +187,8 @@ resource "azurerm_virtual_machine_scale_set" "vmss" {
 
     ip_configuration {
       name                                   = "IPConfiguration"
+	  subnet_id                              = "${azurerm_subnet.serko_demo_subnet.id}"
 	  primary                                = true
-      subnet_id                              = "${azurerm_subnet.serko_demo_subnet.id}"
       load_balancer_backend_address_pool_ids = ["${azurerm_lb_backend_address_pool.bpepool.id}"]
     }
   }
