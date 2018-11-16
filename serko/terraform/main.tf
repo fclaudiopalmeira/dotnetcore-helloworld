@@ -167,7 +167,7 @@ resource "azurerm_virtual_machine_scale_set" "vmss" {
   }
 
   os_profile {
-    computer_name_prefix = "serko_vm"
+    computer_name_prefix = "serkovm"
     admin_username       = "ubuntu"
     admin_password       = "klb15cj1"
   }

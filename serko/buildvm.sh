@@ -15,7 +15,7 @@ echo "************* execute packer build drop path $6"
 packer build  -var playbook_drop_path=./drop ./app.json 2>&1 | tee packer-build-output.log
 
 ## export output variable to terraform 
-export manageddiskname=$(cat packer-build-output.log | grep ManagedImageName: | awk '{print $2}')
+export manageddiskname=$(cat ./packer-build-output.log | grep ManagedImageName: | awk '{print $2}')
 
-##echo "variable $manageddiskname"
+echo "variable $manageddiskname"
 ##[ -z "$manageddiskname" ] && exit 1 || exit 0
